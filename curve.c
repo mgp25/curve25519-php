@@ -34,7 +34,7 @@ PHP_FUNCTION(curve25519_sign){
     }
  	curve25519_sign((unsigned char *)signature, (unsigned char *)privatekey, 
                     (unsigned char *)message, message_len, (unsigned char *)random);
- 	RETURN_STRING(signature, 64);
+ 	RETURN_STRINGL(signature, 64, 1);
 }
 PHP_FUNCTION(curve25519_verify){
 	unsigned char *publickey;
