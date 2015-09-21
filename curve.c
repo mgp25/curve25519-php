@@ -14,11 +14,11 @@ void curve25519_clamp(unsigned char secret[32])
 }
 
 PHP_FUNCTION(curve25519_sign){
-    unsigned char *random;
+    const char *random;
     int random_len;
-    unsigned char *privatekey;
+    const char *privatekey;
     int private_len;
-    unsigned char *message;
+    const char *message;
     int message_len;
     char signature[64];
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss", &random, &random_len,&privatekey,&private_len,&message,&message_len) == FAILURE) {
@@ -34,15 +34,15 @@ PHP_FUNCTION(curve25519_sign){
     }
  	curve25519_sign((unsigned char *)signature, (unsigned char *)privatekey, 
                     (unsigned char *)message, message_len, (unsigned char *)random);
- 	RETURN_STRINGL(signature, 64, 1);
+ 	RETURN_STRINGL((char*)signature, 64,1);
 }
 PHP_FUNCTION(curve25519_verify){
-	unsigned char *publickey;
-	int public_len;
-    unsigned char *message;
-    int message_len;
-    unsigned char *signature;
-    int signature_len;
+    const char *publickey;
+    unsigned int public_len;
+    const char *message;
+    unsigned int message_len;
+    const char *signature;
+    unsigned int signature_len;
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss", &publickey, &public_len,&message,&message_len,&signature,&signature_len) == FAILURE) {
 		RETURN_FALSE;
 	}	
@@ -75,11 +75,12 @@ PHP_FUNCTION(curve25519_private){
 
     RETURN_STRINGL(random, 32, 1);
 }
+
 PHP_FUNCTION(curve25519_public)
 {
-	unsigned char *private;
+	const char *private;
 	int private_len;
-
+    char basepoint[32] = {9};
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &private, &private_len) == FAILURE) {
 		RETURN_FALSE;
 	}
@@ -89,21 +90,19 @@ PHP_FUNCTION(curve25519_public)
 		RETURN_FALSE
 	}
 
-	char *dup = estrdup(private);
-	unsigned char public[32];
-	curve25519_donna(public, dup, basepoint);
+	char public[32];
+	curve25519_donna(public, private, basepoint);
 
-	efree(dup);
 
-	RETURN_STRINGL(public, 32, 1);
+	RETURN_STRINGL((char*)public, 32, 1);
 }
 
 PHP_FUNCTION(curve25519_shared)
 {
-	unsigned char *private;
+	const char *private;
 	int private_len;
 
-	unsigned char *public;
+	const char *public;
 	int public_len;
 
 
@@ -120,10 +119,8 @@ PHP_FUNCTION(curve25519_shared)
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Public must be 32 bytes");
 		RETURN_FALSE;
 	}
-	char *dup = estrdup(private);
-	unsigned char shared_key[32];
-	curve25519_donna(shared_key, dup, public);
-	efree(dup);
+	char shared_key[32];
+	curve25519_donna(shared_key, private, public);
 	RETURN_STRINGL(shared_key, 32, 1);
 }
 
