@@ -1,0 +1,14 @@
+Source: php5-curve25519
+Section: php
+Priority: optional
+Maintainer: Ilya Kozlov <unicast.ru@gmail.com>
+Uploaders: Ilya Kozlov <unicast.ru@gmail.com>
+Build-Depends: debhelper (>= 9), pkg-php-tools (>= 1.6~), php5-dev, dh-php5
+#Standards-Version: 3.9.5
+Vcs-Browser: https://github.com/mgp25/curve25519-php.git
+Vcs-Git: https://github.com/mgp25/curve25519-php.git
+Homepage: https://github.com/mgp25/curve25519-php
+
+Package: php5-curve25519
+Architecture: any
+Description: Curve25519 extension for PHP

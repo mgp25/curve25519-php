@@ -1,0 +1,5 @@
+php5-curve25519 (0.5) stable; urgency=low
+
+  * Initial release. (Closes: #XXXXXX)
+
+ -- Ilya Kozlov <unicast.ru@gmail.com>  Mon, 14 Dec 2015 17:35:08 +0300
