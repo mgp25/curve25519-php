@@ -23,3 +23,6 @@ make
 sudo make install
 ```
 
+# License
+MIT
+
