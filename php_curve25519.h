@@ -1,0 +1,4 @@
+extern zend_module_entry curve25519_module_entry;
+
+#define curve25519_module_ptr &curve25519_module_entry
+#define phpext_curve25519_ptr curve25519_module_ptr
