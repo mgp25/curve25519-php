@@ -1,6 +1,6 @@
 # Curve25519 extension for PHP
 
-![php](https://img.shields.io/badge/php-%3E%3D%207.0-blue.svg) [![sponsor](https://img.shields.io/badge/-Become%20an%20sponsor%20❤-ff6964)](https://github.com/sponsors/mgp25)
+![php](https://img.shields.io/badge/php-%3E%3D%207.0-blue.svg) [![sponsor](https://img.shields.io/badge/-Become%20a%20sponsor%20❤-ff6964)](https://github.com/sponsors/mgp25)
 
 Curve25519 library with Ed25519 signatures extension for PHP. It supports PHP 8.
 
