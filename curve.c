@@ -4,6 +4,8 @@
 
 #include "php.h"
 #include "php_curve25519.h"
+#include "curve/curve25519-donna.h"
+#include "curve/ed25519/additions/curve_sigs.h"
 #include "ext/standard/info.h"
 #include "zend_exceptions.h"
 #include "ext/spl/spl_exceptions.h"
@@ -36,7 +38,7 @@ PHP_FUNCTION(curve25519_sign)
     char signature[64];
 
 #ifndef FAST_ZPP
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss", &random, &random_len, &privatekey, &private_len, &message, &message_len) == FAILURE) {
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "sss", &random, &random_len, &privatekey, &private_len, &message, &message_len) == FAILURE) {
         RETURN_FALSE;
     }
 #else
@@ -48,11 +50,11 @@ PHP_FUNCTION(curve25519_sign)
 #endif
 
     if (private_len != 32) {
-        zend_throw_exception(spl_ce_InvalidArgumentException, "Private key must be 32 bytes", 0 TSRMLS_CC);
+        zend_throw_exception(spl_ce_InvalidArgumentException, "Private key must be 32 bytes", 0);
     }
 
     if (random_len != 64) {
-        zend_throw_exception(spl_ce_InvalidArgumentException, "Random must be 64-byte string", 0 TSRMLS_CC);
+        zend_throw_exception(spl_ce_InvalidArgumentException, "Random must be 64-byte string", 0);
     }
 
  	curve25519_sign((unsigned char *)signature, (unsigned char *)privatekey, 
@@ -82,7 +84,7 @@ PHP_FUNCTION(curve25519_verify)
 #endif  
 
 #ifndef FAST_ZPP
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss", &publickey, &public_len, &message, &message_len, &signature, &signature_len) == FAILURE) {
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "sss", &publickey, &public_len, &message, &message_len, &signature, &signature_len) == FAILURE) {
         RETURN_FALSE;
     }
 #else
@@ -94,11 +96,11 @@ PHP_FUNCTION(curve25519_verify)
 #endif
 
     if (public_len != 32) {
-        zend_throw_exception(spl_ce_InvalidArgumentException, "Public must be 32 bytes", 0 TSRMLS_CC);
+        zend_throw_exception(spl_ce_InvalidArgumentException, "Public must be 32 bytes", 0);
     }
 
     if (signature_len != 64) {
-        zend_throw_exception(spl_ce_InvalidArgumentException, "Signature must be 64-byte string", 0 TSRMLS_CC);
+        zend_throw_exception(spl_ce_InvalidArgumentException, "Signature must be 64-byte string", 0);
     }
 
     int result = curve25519_verify((unsigned char *)signature, (unsigned char *)publickey, 
@@ -117,7 +119,7 @@ PHP_FUNCTION(curve25519_private)
 #endif  
 
 #ifndef FAST_ZPP
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &random, &random_len) == FAILURE) {
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &random, &random_len) == FAILURE) {
         RETURN_FALSE;
     }
 #else
@@ -127,7 +129,7 @@ PHP_FUNCTION(curve25519_private)
 #endif
 
 	if (random_len != 32) {
-        zend_throw_exception(spl_ce_InvalidArgumentException, "Random must be 32-byte string", 0 TSRMLS_CC);
+        zend_throw_exception(spl_ce_InvalidArgumentException, "Random must be 32-byte string", 0);
     }
 
 	random[0] &= 248;
@@ -153,7 +155,7 @@ PHP_FUNCTION(curve25519_public)
     char basepoint[32] = {9};
 
 #ifndef FAST_ZPP
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &private, &private_len) == FAILURE) {
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &private, &private_len) == FAILURE) {
         RETURN_FALSE;
     }
 #else
@@ -163,7 +165,7 @@ PHP_FUNCTION(curve25519_public)
 #endif
 
 	if (private_len != 32) {
-        zend_throw_exception(spl_ce_InvalidArgumentException, "Private key must be 32 bytes", 0 TSRMLS_CC);
+        zend_throw_exception(spl_ce_InvalidArgumentException, "Private key must be 32 bytes", 0);
     }
 
 	char public[32];
@@ -190,7 +192,7 @@ PHP_FUNCTION(curve25519_shared)
 #endif 
 
 #ifndef FAST_ZPP
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &private, &private_len, &public, &public_len) == FAILURE) {
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "ss", &private, &private_len, &public, &public_len) == FAILURE) {
         RETURN_FALSE;
     }
 #else
@@ -201,11 +203,11 @@ PHP_FUNCTION(curve25519_shared)
 #endif
 
 	if (private_len != 32) {
-        zend_throw_exception(spl_ce_InvalidArgumentException, "Private key must be 32 bytes", 0 TSRMLS_CC);
+        zend_throw_exception(spl_ce_InvalidArgumentException, "Private key must be 32 bytes", 0);
     }
 
 	if (public_len != 32) {
-        zend_throw_exception(spl_ce_InvalidArgumentException, "Public must be 32 bytes", 0 TSRMLS_CC);
+        zend_throw_exception(spl_ce_InvalidArgumentException, "Public must be 32 bytes", 0);
     }
 
 	char shared_key[32];
